@@ -44,6 +44,7 @@ available_setting = {
     "group_chat_in_one_session": ["ChatGPT测试群"],  # 支持会话上下文共享的群名称
     "nick_name_black_list": [],  # 用户昵称黑名单
     "group_welcome_msg": "",  # 配置新人进群固定欢迎语，不配置则使用随机风格欢迎
+    "new_friend_welcome_message": "你好，很高兴认识你！我是一个AI助手，可以回答问题、闲聊或提供帮助。",  # 配置新好友自动回复的欢迎语
     "trigger_by_self": False,  # 是否允许机器人触发
     "text_to_image": "dall-e-2",  # 图片生成模型，可选 dall-e-2, dall-e-3
     # Azure OpenAI dall-e-3 配置

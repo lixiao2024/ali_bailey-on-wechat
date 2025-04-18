@@ -9,6 +9,7 @@ from config import conf
 from lib.gewechat import GewechatClient
 import requests
 import xml.etree.ElementTree as ET
+import time
 
 # 私聊信息示例
 """
@@ -312,35 +313,67 @@ class GeWeChatMessage(ChatMessage):
             self.msg_data = msg['data']
         else:
             logger.warning(f"[gewechat] Missing both 'Data' and 'data' in message")
-            
+        
+        # 处理类型为 ModContacts 的消息，可能是新好友事件
+        type_name = msg.get('TypeName', '')
+        if type_name == 'ModContacts':
+            logger.info(f"[gewechat] Received ModContacts event")
+            # 检查是否是新好友
+            if 'UserName' in self.msg_data and 'string' in self.msg_data.get('UserName', {}) and not self.msg_data.get('UserName', {}).get('string', '').endswith('@chatroom'):
+                # BitVal为3通常表示好友关系已建立或有更新
+                bit_val = self.msg_data.get('BitVal', 0)
+                logger.info(f"[gewechat] ModContacts 用户: {self.msg_data.get('NickName', {}).get('string', '未知')}, BitVal: {bit_val}")
+                
+                if bit_val == 3:  # 好友关系已建立
+                    self.ctype = ContextType.NEW_FRIEND_EVENT
+                    self.from_user_id = self.msg_data.get('UserName', {}).get('string', '')
+                    self.to_user_id = msg.get('Wxid', '')
+                    self.other_user_id = self.from_user_id
+                    self.other_user_nickname = self.msg_data.get('NickName', {}).get('string', '')
+                    self.actual_user_id = self.from_user_id
+                    self.actual_user_nickname = self.other_user_nickname
+                    # 设置create_time避免消息被识别为过期
+                    self.create_time = int(time.time())
+                    self.content = f"新好友添加: {self.other_user_nickname} ({self.from_user_id})"
+                    logger.info(f"[gewechat] 检测到新好友: {self.content}")
+                    return
+            return
+        
         self.create_time = self.msg_data.get('CreateTime', 0)
         if not self.msg_data:
             logger.warning(f"[gewechat] No message data available")
             return
-        if 'NewMsgId' not in self.msg_data :
+            
+        # 处理常规消息，检查NewMsgId
+        if 'NewMsgId' not in self.msg_data and type_name != 'ModContacts':
             logger.warning(f"[gewechat] Missing 'NewMsgId' in message data")
             logger.debug(f"[gewechat] msg_data: {self.msg_data}")
             return
-        self.msg_id = self.msg_data['NewMsgId']
-        self.is_group = True if "@chatroom" in self.msg_data['FromUserName']['string'] else False
+            
+        # 只有常规消息才需要NewMsgId
+        if type_name != 'ModContacts':
+            self.msg_id = self.msg_data['NewMsgId']
+        
+        self.is_group = True if "@chatroom" in self.msg_data.get('FromUserName', {}).get('string', '') else False
 
         notes_join_group = ["加入群聊", "加入了群聊", "invited", "joined", "移出了群聊"]
         notes_bot_join_group = ["邀请你", "invited you", "You've joined", "你通过扫描"]
 
         self.client = client
-        msg_type = self.msg_data['MsgType']
+        msg_type = self.msg_data.get('MsgType', 0)
         self.app_id = conf().get("gewechat_app_id")
 
-        self.from_user_id = self.msg_data['FromUserName']['string']
-        self.to_user_id = self.msg_data['ToUserName']['string']
+        self.from_user_id = self.msg_data.get('FromUserName', {}).get('string', '')
+        self.to_user_id = self.msg_data.get('ToUserName', {}).get('string', '')
         self.other_user_id = self.from_user_id
+        
         # 检查是否是公众号等非用户账号的消息
-        if self._is_non_user_message(self.msg_data.get('MsgSource', ''), self.from_user_id):
+        if 'MsgSource' in self.msg_data and self._is_non_user_message(self.msg_data.get('MsgSource', ''), self.from_user_id):
             self.ctype = ContextType.NON_USER_MSG
             self.content = self.msg_data.get('Content', {}).get('string', '')  # 确保获取字符串
             logger.debug(f"[gewechat] detected non-user message from {self.from_user_id}: {self.content}")
             return
-
+            
         if msg_type == 1:  # Text message
             self.ctype = ContextType.TEXT
             self.content = self.msg_data.get('Content', {}).get('string', '')
@@ -483,9 +516,15 @@ class GeWeChatMessage(ChatMessage):
         elif msg_type == 47:
             self.ctype = ContextType.EMOJI
             self.content = self.msg_data.get('Content', {}).get('string', '')
+        elif msg_type == 37:  # 好友请求消息
+            logger.info(f"[gewechat] 收到好友请求消息: {self.msg_data}")
+            self.ctype = ContextType.ACCEPT_FRIEND
+            self.content = self.msg_data.get('Content', {}).get('string', '')
         else:
-            raise NotImplementedError(f"Unsupported message type: Type:{msg_type}")
-
+            logger.warning(f"[gewechat] Unsupported message type: Type:{msg_type}")
+            self.ctype = ContextType.TEXT
+            self.content = f"未支持的消息类型 {msg_type}: {self.msg_data.get('Content', {}).get('string', '')}"
+            
         # 获取群聊或好友的名称
         brief_info_response = self.client.get_brief_info(self.app_id, [self.other_user_id])
         if brief_info_response.get('ret') == 200 and brief_info_response.get('data'):
