@@ -9,3 +9,5 @@ pre-commit
 web.py
 linkai>=0.0.6.0
 cozepy==0.13
+tqdm>=4.66.1
+flask==2.2.3

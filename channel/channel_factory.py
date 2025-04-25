@@ -51,6 +51,9 @@ def create_channel(channel_type) -> Channel:
     elif channel_type == "gewechat":
         from channel.gewechat.gewechat_channel import GeWeChatChannel
         ch = GeWeChatChannel()
+    elif channel_type == "nurse_assistant":
+        from channel.nurse_assistant import NurseAssistantChannel
+        ch = NurseAssistantChannel()
     else:
         raise RuntimeError
     ch.channel_type = channel_type
