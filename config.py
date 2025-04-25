@@ -213,6 +213,11 @@ available_setting = {
     "Minimax_group_id": "",
     "Minimax_base_url": "",
     "web_port": 9899,
+    #阿里百炼平台配置
+    "ali_bailey_api_key": "",
+    "ali_bailey_api_base": "https://api.ali-bailey.com",
+    "ali_bailey_app_id": "",
+    "ali_bailey_node_id": "",
 }
 
 

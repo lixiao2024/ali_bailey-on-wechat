@@ -9,14 +9,14 @@ GEMINI = "gemini"
 DIFY = "dify"
 ZHIPU_AI = "glm-4"
 COZE = "coze"
-CLAUDEAI = "claude"  # 使用cookie的历史模型
-CLAUDEAPI = "claudeAPI"  # 通过Claude api调用模型
+CLAUDEAI = "claude"  # 使用 cookie 的历史模型
+CLAUDEAPI = "claudeAPI"  # 通过 Claude api 调用模型
 QWEN = "qwen"  # 旧版通义模型
-QWEN_DASHSCOPE = "dashscope"  # 通义新版sdk和api key
+QWEN_DASHSCOPE = "dashscope"  # 通义新版 sdk 和 api key
 GEMINI = "gemini"  # gemini-1.0-pro
 MOONSHOT = "moonshot"
 MiniMax = "minimax"
-DEEPSEEK = "deepseek"  # Deepseek模型
+DEEPSEEK = "deepseek"  # Deepseek 模型
 
 MODELSCOPE = "modelscope"
 
@@ -84,8 +84,8 @@ CLAUDE_35_SONNET_0620 = "claude-3-5-sonnet-20240620"
 CLAUDE_3_SONNET = "claude-3-sonnet-20240229"
 CLAUDE_3_HAIKU = "claude-3-haiku-20240307"
 
-DEEPSEEK_CHAT = "deepseek-chat"  # DeepSeek-V3对话模型
-DEEPSEEK_REASONER = "deepseek-reasoner"  # DeepSeek-R1模型
+DEEPSEEK_CHAT = "deepseek-chat"  # DeepSeek-V3 对话模型
+DEEPSEEK_REASONER = "deepseek-reasoner"  # DeepSeek-R1 模型
 
 GITEE_AI_MODEL_LIST = ["Yi-34B-Chat", "InternVL2-8B", "deepseek-coder-33B-instruct", "InternVL2.5-26B", "Qwen2-VL-72B", "Qwen2.5-32B-Instruct", "glm-4-9b-chat", "codegeex4-all-9b", "Qwen2.5-Coder-32B-Instruct", "Qwen2.5-72B-Instruct", "Qwen2.5-7B-Instruct", "Qwen2-72B-Instruct", "Qwen2-7B-Instruct", "code-raccoon-v1", "Qwen2.5-14B-Instruct"]
 
@@ -116,3 +116,5 @@ MODEL_LIST = MODEL_LIST + GITEE_AI_MODEL_LIST + MODELSCOPE_MODEL_LIST
 # channel
 FEISHU = "feishu"
 DINGTALK = "dingtalk"
+
+ALI_BAILEY = "ali_bailey"  # 阿里百炼智能体

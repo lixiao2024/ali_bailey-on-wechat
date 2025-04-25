@@ -1,0 +1,29 @@
+{
+    "channel_type": "gewechat",
+    "debug": true,
+    "dify_api_base": "http://ai.hulizhushou.com/v1",
+    "dify_api_key": "app-cYFJ4283XKDlt9WWKepes9KJ",
+    "dify_app_type": "chatflow",
+    "gewechat_app_id": "wx_nbqVqkIboB5MRK8L6AH11",
+    "gewechat_base_url": "http://192.168.31.183:2531/v2/api",
+    "gewechat_callback_url": "http://192.168.31.183:9919/v2/api/callback/collect",
+    "gewechat_download_url": "http://192.168.31.183:2532/download",
+    "gewechat_token": "1c474b2527594e13b9977da68b9c7428",
+    "group_chat_prefix": [
+        "@bot"
+    ],
+    "group_name_white_list": [
+        "ALL_GROUP"
+    ],
+    "image_recognition": true,
+    "model": "dify",
+    "new_friend_welcome_message": "你好，感谢添加我为好友！我是一个智能助手，很高兴为您服务。",
+    "single_chat_prefix": [
+        ""
+    ],
+    "single_chat_reply_prefix": "",
+    "speech_recognition": true,
+    "text_to_voice": "dify",
+    "voice_reply_voice": true,
+    "voice_to_text": "dify"
+}
