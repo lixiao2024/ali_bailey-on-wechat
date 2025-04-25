@@ -37,7 +37,7 @@ plugins/banwords/lib/__pycache__
 !plugins/custom_dify_app
 !plugins/group_at_autoreply
 client_config.json
-
+plugins/jina_sum/config.json.template
 
 # auto coder
 .auto-coder
